@@ -1,184 +1,170 @@
-# 🚗⚡ EV Routing Simulation - Frontend
+# EV Charge Routing Simulation Frontend
 
-React-based frontend for the EV routing simulation tool, featuring an interactive map, route visualization, and comprehensive statistics display.
+A modern, responsive web application for simulating electric vehicle routing and charging strategies. Built with React, Tailwind CSS, and Framer Motion.
 
-## 🚀 Quick Start
+## 🚀 Features
 
-### Prerequisites
-- Node.js 16+
-- npm or yarn
+### ✨ Modern UI/UX
+- **Dark/Light Theme Toggle** - Seamless theme switching with persistent preferences
+- **Smooth Animations** - Framer Motion powered transitions and micro-interactions
+- **Responsive Design** - Optimized for desktop, tablet, and mobile devices
+- **Interactive Maps** - Mapbox GL JS integration with animated route visualization
 
-### Installation
+### 🧭 Simulation Dashboard
+- **Split View Layout** - Map panel (2/3) and control panel (1/3) for optimal workflow
+- **Real-time Route Calculation** - Multiple algorithm support (Dijkstra, A*, AI-powered)
+- **Interactive Controls** - Animated sliders, dropdowns, and form elements
+- **Live Parameter Updates** - Instant feedback on simulation settings
 
-1. **Install dependencies:**
+### 📊 Results & Analytics
+- **Comprehensive Charts** - Bar charts, line charts, and pie charts using Recharts
+- **Performance Metrics** - Distance, time, energy consumption, and cost analysis
+- **Route Comparison** - Side-by-side algorithm performance comparison
+- **Export Capabilities** - Download reports in multiple formats
+
+### 🔧 Technical Features
+- **State Management** - Zustand for lightweight, persistent state
+- **API Integration** - RESTful API communication with error handling
+- **Form Validation** - Real-time validation with animated feedback
+- **Loading States** - Skeleton screens and progress indicators
+
+## 🛠️ Tech Stack
+
+- **Framework**: React 18
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **State Management**: Zustand
+- **Routing**: React Router DOM
+- **Maps**: Mapbox GL JS
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **HTTP Client**: Axios
+- **Notifications**: React Hot Toast
+
+## 📦 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd predictive/frontend
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. **Start development server:**
+3. **Set up environment variables**
+   Create a `.env` file in the frontend directory:
+   ```env
+   REACT_APP_API_URL=http://localhost:8000
+   REACT_APP_MAPBOX_TOKEN=your_mapbox_token_here
+   ```
+
+4. **Start the development server**
    ```bash
    npm start
    ```
 
-3. **Open your browser:**
-   Navigate to `http://localhost:3000`
+The application will be available at `http://localhost:3000`
 
 ## 🏗️ Project Structure
 
 ```
-frontend/
-├── public/
-│   ├── index.html          # Main HTML template
-│   └── manifest.json       # PWA manifest
-├── src/
-│   ├── components/
-│   │   ├── Header.js       # Application header
-│   │   ├── RouteSimulator.js # Main simulator component
-│   │   ├── RouteForm.js    # Route configuration form
-│   │   ├── RouteMap.js     # Interactive map component
-│   │   ├── RouteResults.js # Route statistics display
-│   │   └── RouteComparison.js # Route comparison view
-│   ├── services/
-│   │   └── api.js          # API communication service
-│   ├── App.js              # Main application component
-│   ├── App.css             # Global styles
-│   ├── index.js            # Application entry point
-│   └── index.css           # Base styles
-├── package.json            # Dependencies and scripts
-└── README.md              # This file
+src/
+├── components/          # Reusable UI components
+│   ├── Header.jsx      # Navigation and theme toggle
+│   ├── Footer.jsx      # Footer with links
+│   ├── MapPanel.jsx    # Interactive map component
+│   ├── ControlPanel.jsx # Simulation controls
+│   └── AnimatedBackground.jsx # Hero background animation
+├── pages/              # Page components
+│   ├── Home.jsx        # Landing page
+│   ├── Simulation.jsx  # Main simulation dashboard
+│   └── Results.jsx     # Results and analytics
+├── store/              # State management
+│   └── simulationStore.js # Zustand store
+├── services/           # API and external services
+│   └── api.js         # API client and endpoints
+├── lib/               # Utility functions
+│   └── utils.js       # Class name utilities
+└── index.css          # Global styles and Tailwind
 ```
 
-## 🎨 Features
+## 🎨 Design System
 
-### Interactive Map
-- **Leaflet Integration**: OpenStreetMap-based visualization
-- **Route Display**: Visual route paths with different colors
-- **Markers**: Start/end points and charging stations
-- **Responsive**: Works on desktop and mobile devices
+### Colors
+- **Primary**: `#BA68ED` (Purple)
+- **Background**: `#172144` (Dark) / `#FFFFFF` (Light)
+- **Card**: `#1e2a4a` (Dark) / `#FFFFFF` (Light)
+- **Border**: `#2d3a5a` (Dark) / `#E5E7EB` (Light)
 
-### Route Configuration
-- **Location Selection**: Dropdown menus for Amsterdam locations
-- **Driver Profiles**: Eco, Aggressive, and Balanced options
-- **Battery Settings**: Capacity and current charge configuration
-- **Algorithm Selection**: Dijkstra, A*, and Multi-objective options
-- **AI Enhancement**: Optional AI-powered optimization
+### Typography
+- **Headings**: Inter font family
+- **Body**: System font stack
+- **Code**: Monospace font
 
-### Results Display
-- **Route Statistics**: Distance, time, energy, cost, and emissions
-- **Charging Stops**: Detailed information about charging stations
-- **Visual Charts**: Bar charts for metric comparison
-- **AI Insights**: AI enhancement suggestions and reasoning
+### Spacing
+- **Container**: `max-w-7xl` (1280px)
+- **Padding**: `p-4` (16px) to `p-8` (32px)
+- **Gap**: `gap-4` (16px) to `gap-8` (32px)
 
-### Route Comparison
-- **Side-by-side Analysis**: Compare multiple routing algorithms
-- **Performance Metrics**: Best routes by different criteria
-- **Visual Comparison**: Color-coded route visualization
-- **Summary Cards**: Quick overview of each algorithm's performance
+## 🔌 API Integration
 
-## 🛠️ Development
+The frontend communicates with the backend through RESTful APIs:
+
+### Endpoints
+- `POST /api/calculate-routes` - Calculate optimal routes
+- `GET /api/charging-stations` - Get charging station data
+- `POST /api/optimize-route` - AI-powered route optimization
+- `GET /api/simulation/{id}` - Get simulation results
+- `POST /api/simulation` - Save simulation data
+- `GET /api/export/{id}` - Export results
+
+### Mock Data
+For development, the app includes mock API responses that simulate real backend behavior.
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Docker Deployment
+```bash
+docker build -t ev-routing-frontend .
+docker run -p 3000:3000 ev-routing-frontend
+```
+
+## 🧪 Development
 
 ### Available Scripts
-
 - `npm start` - Start development server
 - `npm build` - Build for production
 - `npm test` - Run tests
 - `npm eject` - Eject from Create React App
 
-### Key Dependencies
-
-- **React 18**: Modern React with hooks
-- **Leaflet**: Interactive maps
-- **React-Leaflet**: React wrapper for Leaflet
-- **Axios**: HTTP client for API communication
-- **React-Select**: Enhanced select components
-- **Recharts**: Data visualization charts
-- **Styled-Components**: CSS-in-JS styling
-
-### Styling
-
-The application uses a combination of:
-- **Styled-Components**: For component-specific styles
-- **CSS Modules**: For global styles
-- **Responsive Design**: Mobile-first approach
-- **Modern UI**: Clean, professional interface
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the frontend directory:
-
-```bash
-REACT_APP_API_URL=http://localhost:8000
-REACT_APP_MAP_TILE_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
-```
-
-### API Configuration
-
-The frontend communicates with the backend API through the `api.js` service:
-
-```javascript
-import { calculateRoute, compareRoutes } from '../services/api';
-
-// Example usage
-const routeData = await calculateRoute({
-  origin: 'Amsterdam_Central',
-  destination: 'Museumplein',
-  driverProfile: 'eco',
-  routingModel: 'dijkstra'
-});
-```
+### Code Style
+- Use functional components with hooks
+- Follow React best practices
+- Use Tailwind CSS for styling
+- Implement proper error boundaries
+- Add loading states for async operations
 
 ## 📱 Responsive Design
 
-The application is fully responsive and works on:
-- **Desktop**: Full-featured interface with sidebar layout
-- **Tablet**: Adapted layout with collapsible sidebar
-- **Mobile**: Single-column layout optimized for touch
+The application is fully responsive with breakpoints:
+- **Mobile**: `< 768px`
+- **Tablet**: `768px - 1024px`
+- **Desktop**: `> 1024px`
 
-## 🎯 User Experience
+## 🎯 Performance
 
-### Intuitive Interface
-- **Clear Navigation**: Easy-to-understand layout
-- **Visual Feedback**: Loading states and animations
-- **Error Handling**: User-friendly error messages
-- **Accessibility**: WCAG compliant design
-
-### Performance
-- **Lazy Loading**: Components load on demand
-- **Optimized Bundles**: Efficient code splitting
-- **Fast Rendering**: Optimized React components
-- **Caching**: API response caching
-
-## 🧪 Testing
-
-### Running Tests
-```bash
-npm test
-```
-
-### Test Coverage
-```bash
-npm test -- --coverage
-```
-
-### Testing Strategy
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: API communication testing
-- **E2E Tests**: Full user journey testing
-
-## 🚀 Deployment
-
-### Production Build
-```bash
-npm run build
-```
-
-### Deployment Options
-- **Netlify**: Drag and drop deployment
-- **Vercel**: Git-based deployment
-- **AWS S3**: Static hosting
-- **Docker**: Containerized deployment
+- **Code Splitting** - Route-based code splitting
+- **Lazy Loading** - Components loaded on demand
+- **Optimized Images** - WebP format with fallbacks
+- **Bundle Analysis** - Webpack bundle analyzer integration
 
 ## 🤝 Contributing
 
@@ -188,10 +174,20 @@ npm run build
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License.
 
----
+## 👨‍💻 Author
 
-**Built with React and modern web technologies for sustainable urban mobility** 
+**Sharvesh Selvakumar**
+- GitHub: [@sharvesh1401](https://github.com/sharvesh1401)
+- Portfolio: [sharveshfolio.netlify.app](https://sharveshfolio.netlify.app)
+
+## 🙏 Acknowledgments
+
+- Mapbox for mapping services
+- Framer Motion for animations
+- Tailwind CSS for styling
+- Recharts for data visualization
+- Lucide for beautiful icons 
