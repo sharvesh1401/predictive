@@ -1,0 +1,9 @@
+streamlit
+osmnx
+networkx
+pandas
+geopandas
+shapely
+geopy
+numpy
+scikit-learn
