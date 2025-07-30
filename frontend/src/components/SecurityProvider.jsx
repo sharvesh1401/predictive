@@ -44,6 +44,8 @@ export const SecurityProvider = ({ children }) => {
         // Show security status
         if (allKeysValid) {
           toast.success('🔒 Security system initialized successfully');
+        } else if (Object.keys(apiKeyValidation).length === 0) {
+          toast.warning('⚠️ No API keys configured. Some features will be limited.');
         } else {
           toast.error('⚠️ Some API keys are invalid. Please check configuration.');
         }

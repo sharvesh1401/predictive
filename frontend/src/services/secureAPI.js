@@ -50,38 +50,53 @@ class SecureAPIKeyManager {
   // Initialize API keys with encryption
   initializeKeys() {
     try {
+      let keysInitialized = 0;
+
       // Mapbox API Key
       const mapboxKey = process.env.REACT_APP_MAPBOX_TOKEN;
-      if (!mapboxKey) {
-        throw new Error('REACT_APP_MAPBOX_TOKEN environment variable is required');
+      if (mapboxKey && mapboxKey !== 'your_mapbox_token_here') {
+        this.addKey('mapbox', mapboxKey, 'MAPBOX');
+        keysInitialized++;
+      } else {
+        console.warn('Mapbox API key not configured. Map functionality will be limited.');
       }
-      this.addKey('mapbox', mapboxKey, 'MAPBOX');
 
       // DeepSeek API Key
       const deepseekKey = process.env.REACT_APP_DEEPSEEK_API_KEY;
-      if (!deepseekKey) {
-        throw new Error('REACT_APP_DEEPSEEK_API_KEY environment variable is required');
+      if (deepseekKey && deepseekKey !== 'your_deepseek_api_key_here') {
+        this.addKey('deepseek', deepseekKey, 'DEEPSEEK');
+        keysInitialized++;
+      } else {
+        console.warn('DeepSeek API key not configured. AI navigation will use fallback.');
       }
-      this.addKey('deepseek', deepseekKey, 'DEEPSEEK');
 
       // Groq API Key
       const groqKey = process.env.REACT_APP_GROQ_API_KEY;
-      if (!groqKey) {
-        throw new Error('REACT_APP_GROQ_API_KEY environment variable is required');
+      if (groqKey && groqKey !== 'your_groq_api_key_here') {
+        this.addKey('groq', groqKey, 'GROQ');
+        keysInitialized++;
+      } else {
+        console.warn('Groq API key not configured. AI navigation will use fallback.');
       }
-      this.addKey('groq', groqKey, 'GROQ');
 
       security.securityMonitor.logEvent('api_keys_initialized', {
-        keysCount: this.keys.size,
+        keysCount: keysInitialized,
         timestamp: Date.now()
       }, 'info');
+
+      // Log configuration status
+      if (keysInitialized === 0) {
+        console.warn('No API keys configured. Please set environment variables for full functionality.');
+      } else {
+        console.log(`Successfully initialized ${keysInitialized} API keys.`);
+      }
 
     } catch (error) {
       security.securityMonitor.logEvent('api_key_initialization_failed', {
         error: error.message,
         timestamp: Date.now()
       }, 'high');
-      throw error;
+      console.error('API key initialization failed:', error.message);
     }
   }
 
@@ -128,6 +143,12 @@ class SecureAPIKeyManager {
   // Get API key with usage tracking
   getKey(name) {
     try {
+      // Check if key exists
+      const keyData = this.keys.get(name);
+      if (!keyData) {
+        throw new Error(`API key '${name}' not configured. Please set the environment variable.`);
+      }
+
       // Check rate limiting
       const rateLimitKey = `api_key_${name}`;
       if (!security.rateLimiter.isAllowed(rateLimitKey, SECURITY_CONFIG.RATE_LIMITS.API_CALLS)) {
@@ -141,7 +162,6 @@ class SecureAPIKeyManager {
       }
 
       // Update usage statistics
-      const keyData = this.keys.get(name);
       if (keyData) {
         keyData.lastUsed = Date.now();
         keyData.usageCount++;

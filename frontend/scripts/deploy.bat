@@ -45,9 +45,9 @@ echo [INFO] Setting up environment...
 if not exist .env (
     (
         echo # Environment Variables
-        echo REACT_APP_MAPBOX_TOKEN=14402eda-48ca-4832-b2e4-fce9aa6e40b8
-        echo REACT_APP_DEEPSEEK_API_KEY=sk-744d64e9a996410da9b03c7c79b66d8f
-        echo REACT_APP_GROQ_API_KEY=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
+        echo REACT_APP_MAPBOX_TOKEN=your_mapbox_token_here
+echo REACT_APP_DEEPSEEK_API_KEY=your_deepseek_api_key_here
+        echo REACT_APP_GROQ_API_KEY=your_groq_api_key_here
         echo REACT_APP_API_URL=https://ev-routing-backend.vercel.app
         echo GENERATE_SOURCEMAP=false
         echo REACT_APP_ENABLE_PWA=true

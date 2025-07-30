@@ -117,26 +117,39 @@ export const aiNavigationService = {
       }
     }`;
 
+    // Check if AI services are available
+    const availableKeys = secureAPIService.validateAPIKeys();
+    const hasDeepSeek = availableKeys.deepseek?.valid;
+    const hasGroq = availableKeys.groq?.valid;
+
+    if (!hasDeepSeek && !hasGroq) {
+      throw new Error('AI navigation services not configured. Please set API keys for DeepSeek or Groq.');
+    }
+
     // Try DeepSeek API first using secure service
-    try {
-      const deepseekResponse = await secureAPIService.callDeepSeekAPI(prompt);
-      const content = deepseekResponse.choices[0].message.content;
-      
+    if (hasDeepSeek) {
       try {
-        const routeData = JSON.parse(content);
-        return {
-          ...routeData,
-          aiProvider: 'deepseek',
-          success: true
-        };
-      } catch (parseError) {
-        console.warn('Failed to parse DeepSeek response:', parseError);
-        throw new Error('Invalid response format from DeepSeek');
+        const deepseekResponse = await secureAPIService.callDeepSeekAPI(prompt);
+        const content = deepseekResponse.choices[0].message.content;
+        
+        try {
+          const routeData = JSON.parse(content);
+          return {
+            ...routeData,
+            aiProvider: 'deepseek',
+            success: true
+          };
+        } catch (parseError) {
+          console.warn('Failed to parse DeepSeek response:', parseError);
+          throw new Error('Invalid response format from DeepSeek');
+        }
+      } catch (deepseekError) {
+        console.warn('DeepSeek failed, trying Groq:', deepseekError);
       }
-    } catch (deepseekError) {
-      console.warn('DeepSeek failed, trying Groq:', deepseekError);
-      
-      // Fallback to Groq API using secure service
+    }
+    
+    // Fallback to Groq API using secure service
+    if (hasGroq) {
       try {
         const groqResponse = await secureAPIService.callGroqAPI(prompt);
         const content = groqResponse.choices[0].message.content;
@@ -153,10 +166,12 @@ export const aiNavigationService = {
           throw new Error('Invalid response format from Groq');
         }
       } catch (groqError) {
-        console.error('Both AI APIs failed:', groqError);
+        console.error('Groq API failed:', groqError);
         throw new Error('AI navigation services are currently unavailable');
       }
     }
+
+    throw new Error('No AI navigation services available. Please configure API keys.');
   }
 };
 
@@ -201,8 +216,38 @@ export const mockAPI = {
           }
         };
       } catch (aiError) {
-        console.warn('AI navigation failed, falling back to mock data:', aiError);
-        // Fall back to regular mock data
+        console.warn('AI navigation failed, falling back to mock data:', aiError.message);
+        // Fall back to mock data with AI provider info
+        return {
+          routes: [
+            {
+              id: 1,
+              algorithm: 'ai',
+              aiProvider: 'mock',
+              distance: 13.1,
+              duration: 20,
+              energy: 7.8,
+              cost: 14.5,
+              coordinates: [
+                [4.9041, 52.3676],
+                [4.9141, 52.3776],
+                [4.9241, 52.3876]
+              ],
+              chargingStops: [
+                { lat: 4.9141, lng: 52.3776, duration: 15, cost: 8.50 }
+              ],
+              reasoning: `Mock AI route (${aiError.message})`
+            }
+          ],
+          summary: {
+            totalRoutes: 1,
+            bestRoute: 1,
+            averageDistance: 13.1,
+            averageDuration: 20,
+            averageEnergy: 7.8,
+            averageCost: 14.5
+          }
+        };
       }
     }
     

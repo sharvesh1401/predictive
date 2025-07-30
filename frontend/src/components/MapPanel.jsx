@@ -17,10 +17,12 @@ import { mockAPI } from '../services/api';
 import { MAP_CONFIG } from '../constants';
 
 // Set Mapbox access token from environment variable
-if (MAP_CONFIG.ACCESS_TOKEN) {
+if (MAP_CONFIG.ACCESS_TOKEN && MAP_CONFIG.ACCESS_TOKEN !== 'your_mapbox_token_here') {
   mapboxgl.accessToken = MAP_CONFIG.ACCESS_TOKEN;
 } else {
-  console.error('Mapbox access token not found. Please set REACT_APP_MAPBOX_TOKEN environment variable.');
+  console.warn('Mapbox access token not configured. Map functionality will be limited.');
+  // Set a placeholder token to prevent errors (will show limited functionality)
+  mapboxgl.accessToken = 'pk.placeholder';
 }
 
 const MapPanel = () => {

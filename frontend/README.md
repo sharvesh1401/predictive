@@ -214,6 +214,7 @@ Before running the application, you need to set up your API keys:
 - Never commit your `.env.local` file to version control
 - API keys are automatically encrypted and secured
 - All sensitive data is protected with AES-256-GCM encryption
+- **Graceful Degradation**: The app works without API keys but with limited functionality
 
 ## 🚀 Deployment
 

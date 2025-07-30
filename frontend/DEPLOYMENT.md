@@ -62,6 +62,39 @@ docker run -d -p 80:80 --name ev-routing-app ev-routing-simulation
 # Your app will be available at http://localhost
 ```
 
+## 🔐 Security Configuration
+
+### **Environment Variables Setup**
+Before deploying, you must configure your API keys securely:
+
+1. **Get your API keys:**
+   - **Mapbox**: [Get Mapbox Token](https://account.mapbox.com/access-tokens/)
+   - **DeepSeek**: [Get DeepSeek API Key](https://platform.deepseek.com/)
+   - **Groq**: [Get Groq API Key](https://console.groq.com/)
+
+2. **Set environment variables in your deployment platform:**
+   ```bash
+   REACT_APP_MAPBOX_TOKEN=your_actual_mapbox_token
+   REACT_APP_DEEPSEEK_API_KEY=your_actual_deepseek_key
+   REACT_APP_GROQ_API_KEY=your_actual_groq_key
+   REACT_APP_API_URL=https://ev-routing-backend.vercel.app
+   ```
+
+**⚠️ Critical Security Notes:**
+- **Never commit API keys to version control**
+- **Use environment variables or secure secret management**
+- **Rotate API keys regularly**
+- **Monitor API key usage for suspicious activity**
+
+### **Local Development Setup**
+```bash
+# Copy the example environment file
+cp env.example .env.local
+
+# Edit .env.local with your actual API keys
+# Never commit .env.local to version control
+```
+
 ## ☁️ Cloud Platform Deployment
 
 ### AWS Amplify
