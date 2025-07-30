@@ -1,8 +1,30 @@
 {
-  "name": "ev-routing-frontend",
+  "name": "ev-routing-simulation",
   "version": "1.0.0",
-  "description": "Electric Vehicle Routing Simulation Frontend",
+  "description": "Advanced EV Charge Routing Simulation Tool - Optimize electric vehicle routes with AI-powered algorithms",
   "private": true,
+  "homepage": "https://ev-routing-simulation.vercel.app",
+  "author": {
+    "name": "Sharvesh Selvakumar",
+    "email": "sharvesh1401@gmail.com",
+    "url": "https://sharveshfolio.netlify.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sharvesh1401/ev-routing-simulation.git"
+  },
+  "keywords": [
+    "ev-routing",
+    "electric-vehicle",
+    "charging-stations",
+    "ai-optimization",
+    "amsterdam",
+    "sustainable-transportation",
+    "react",
+    "tailwindcss",
+    "framer-motion"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -28,6 +50,7 @@
     "react-hot-toast": "^2.4.1",
     "clsx": "^2.0.0",
     "tailwind-merge": "^1.14.0",
+    "crypto-js": "^4.2.0",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slider": "^1.1.2",
@@ -47,9 +70,21 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build:analyze": "npm run build && npx webpack-bundle-analyzer build/static/js/*.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md}",
+    "type-check": "tsc --noEmit",
+    "prebuild": "npm run lint && npm run type-check",
+    "postbuild": "echo 'Build completed successfully!'",
+    "deploy": "npm run build && vercel --prod",
+    "deploy:preview": "npm run build && vercel",
+    "clean": "rm -rf build node_modules/.cache",
+    "dev": "npm run start"
   },
   "eslintConfig": {
     "extends": [
@@ -69,5 +104,12 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8000",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 } 

@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Frontend React App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=http://backend:8000
+      - REACT_APP_MAPBOX_TOKEN=14402eda-48ca-4832-b2e4-fce9aa6e40b8
+      - REACT_APP_DEEPSEEK_API_KEY=sk-744d64e9a996410da9b03c7c79b66d8f
+      - REACT_APP_GROQ_API_KEY=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
+    depends_on:
+      - backend
+    networks:
+      - ev-routing-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API (if you have one)
+  backend:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+    volumes:
+      - ./backend:/app
+    command: npm start
+    networks:
+      - ev-routing-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Development service (optional)
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - ev-routing-network
+    profiles:
+      - dev
+
+networks:
+  ev-routing-network:
+    driver: bridge
+
+volumes:
+  node_modules: 

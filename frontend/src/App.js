@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { useSimulationStore } from './store/simulationStore';
+import SecurityProvider, { SecurityStatus, SecurityMonitor } from './components/SecurityProvider';
 
 // Components
 import Header from './components/Header';
@@ -45,96 +46,100 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-background text-foreground">
-        <Header />
-        
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route 
-              path="/" 
-              element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Home />
-                </motion.div>
-              } 
-            />
-            <Route 
-              path="/simulation" 
-              element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Simulation />
-                </motion.div>
-              } 
-            />
-            <Route 
-              path="/results" 
-              element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Results />
-                </motion.div>
-              } 
-            />
-            <Route 
-              path="/playground" 
-              element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Playground />
-                </motion.div>
-              } 
-            />
-            <Route 
-              path="/docs" 
-              element={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Docs />
-                </motion.div>
-              } 
-            />
-          </Routes>
-        </AnimatePresence>
+    <SecurityProvider>
+      <Router>
+        <div className="min-h-screen bg-background text-foreground">
+          <Header />
+          <SecurityStatus />
+          <SecurityMonitor />
+          
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route 
+                path="/" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Home />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/simulation" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Simulation />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/results" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Results />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/playground" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Playground />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/docs" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Docs />
+                  </motion.div>
+                } 
+              />
+            </Routes>
+          </AnimatePresence>
 
-        <Footer />
-        
-        {/* Toast notifications */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: isDarkMode ? '#1F2937' : '#FFFFFF',
-              color: isDarkMode ? '#F9FAFB' : '#111827',
-              border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
-            },
-          }}
-        />
-      </div>
-    </Router>
+          <Footer />
+          
+          {/* Toast notifications */}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: isDarkMode ? '#1F2937' : '#FFFFFF',
+                color: isDarkMode ? '#F9FAFB' : '#111827',
+                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+              },
+            }}
+          />
+        </div>
+      </Router>
+    </SecurityProvider>
   );
 }
 

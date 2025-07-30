@@ -32,7 +32,7 @@ import {
 import { useSimulationStore } from '../store/simulationStore';
 
 const Results = () => {
-  const { routes, selectedRoute } = useSimulationStore();
+  const { routes, selectedRoute, aiProvider } = useSimulationStore();
 
   // Mock data for charts
   const routeComparisonData = [
@@ -88,7 +88,7 @@ const Results = () => {
   ];
 
   const routeDetails = [
-    { label: 'Algorithm Used', value: 'Dijkstra', icon: Route },
+    { label: 'Algorithm Used', value: selectedRoute?.algorithm || 'Dijkstra', icon: Route },
     { label: 'User Profile', value: 'Balanced', icon: Target },
     { label: 'Battery Efficiency', value: '92%', icon: Zap },
     { label: 'Route Score', value: '8.7/10', icon: Award },
@@ -319,6 +319,24 @@ const Results = () => {
                   </motion.div>
                 );
               })}
+              
+              {/* AI Provider Information */}
+              {aiProvider && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="flex items-center space-x-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg"
+                >
+                  <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">AI Provider</p>
+                    <p className="font-semibold text-green-600">{aiProvider.toUpperCase()}</p>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </div>

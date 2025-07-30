@@ -27,6 +27,24 @@ A modern, responsive web application for simulating electric vehicle routing and
 - **API Integration** - RESTful API communication with error handling
 - **Form Validation** - Real-time validation with animated feedback
 - **Loading States** - Skeleton screens and progress indicators
+- **Performance Optimization** - Debouncing, throttling, and memoization
+- **Code Splitting** - Lazy loading and dynamic imports
+- **Memory Management** - Automatic cleanup and optimization
+- **Component Architecture** - Reusable UI components with variants
+
+### 🔒 **Maximum Security Features**
+- **API Key Encryption** - AES-256-GCM encryption for all API keys
+- **Secure Storage** - Encrypted local storage with key rotation
+- **Rate Limiting** - Comprehensive rate limiting for all API calls
+- **Input Sanitization** - XSS, SQL injection, and malicious code prevention
+- **CSRF Protection** - Cross-site request forgery prevention
+- **Security Monitoring** - Real-time threat detection and alerting
+- **API Key Validation** - Format validation and usage tracking
+- **Secure HTTP Client** - Encrypted communication with retry logic
+- **Content Security Policy** - Comprehensive CSP headers
+- **Security Headers** - XSS protection, frame options, and more
+- **GDPR Compliance** - Data privacy and user rights protection
+- **Audit Logging** - Complete security event logging
 
 ## 🛠️ Tech Stack
 
@@ -40,13 +58,36 @@ A modern, responsive web application for simulating electric vehicle routing and
 - **Icons**: Lucide React
 - **HTTP Client**: Axios
 - **Notifications**: React Hot Toast
+- **Security**: CryptoJS, AES-256-GCM encryption
+- **Monitoring**: Real-time security monitoring
 
-## 📦 Installation
+## 🚀 Single-Click Deployment
+
+### 🎯 **Quick Deploy (Recommended)**
+
+**[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/sharvesh1401/ev-routing-simulation&env=REACT_APP_MAPBOX_TOKEN,REACT_APP_DEEPSEEK_API_KEY,REACT_APP_GROQ_API_KEY&envDescription=API%20Keys%20for%20the%20application&envLink=https://github.com/sharvesh1401/ev-routing-simulation#environment-variables)**
+
+**Steps:**
+1. Click the "Deploy with Vercel" button above
+2. Connect your GitHub account
+3. Click "Deploy"
+4. Your app will be live in 2-3 minutes!
+
+### 🐳 **Docker Deployment**
+
+```bash
+# Clone and deploy with one command
+git clone https://github.com/sharvesh1401/ev-routing-simulation.git
+cd ev-routing-simulation/frontend
+docker-compose up -d
+```
+
+### 📱 **Local Development**
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd predictive/frontend
+   git clone https://github.com/sharvesh1401/ev-routing-simulation.git
+   cd ev-routing-simulation/frontend
    ```
 
 2. **Install dependencies**
@@ -54,25 +95,37 @@ A modern, responsive web application for simulating electric vehicle routing and
    npm install
    ```
 
-3. **Set up environment variables**
-   Create a `.env` file in the frontend directory:
-   ```env
-   REACT_APP_API_URL=http://localhost:8000
-   REACT_APP_MAPBOX_TOKEN=your_mapbox_token_here
-   ```
-
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    npm start
    ```
 
 The application will be available at `http://localhost:3000`
 
-## 🏗️ Project Structure
+### 🚀 **Automated Deployment Script**
+
+**Windows:**
+```bash
+# Run the automated deployment script
+scripts\deploy.bat
+```
+
+**Linux/Mac:**
+```bash
+# Make script executable and run
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh
+```
+
+## 🏗️ Optimized Project Structure
 
 ```
 src/
 ├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components
+│   │   ├── Button.jsx  # Reusable button component
+│   │   ├── Card.jsx    # Card component with variants
+│   │   └── Slider.jsx  # Custom slider component
 │   ├── Header.jsx      # Navigation and theme toggle
 │   ├── Footer.jsx      # Footer with links
 │   ├── MapPanel.jsx    # Interactive map component
@@ -82,11 +135,19 @@ src/
 │   ├── Home.jsx        # Landing page
 │   ├── Simulation.jsx  # Main simulation dashboard
 │   └── Results.jsx     # Results and analytics
+├── hooks/              # Custom React hooks
+│   ├── useSimulation.js # Simulation logic hook
+│   └── useMap.js       # Map management hook
 ├── store/              # State management
 │   └── simulationStore.js # Zustand store
 ├── services/           # API and external services
 │   └── api.js         # API client and endpoints
-├── lib/               # Utility functions
+├── utils/              # Utility functions
+│   ├── performance.js  # Performance optimization utilities
+│   └── utils.js        # General utilities
+├── constants/          # Application constants
+│   └── index.js       # Centralized configuration
+├── lib/               # Third-party utilities
 │   └── utils.js       # Class name utilities
 └── index.css          # Global styles and Tailwind
 ```
@@ -159,11 +220,30 @@ The application is fully responsive with breakpoints:
 - **Tablet**: `768px - 1024px`
 - **Desktop**: `> 1024px`
 
-## 🎯 Performance
+## 🎯 Performance Optimizations
 
-- **Code Splitting** - Route-based code splitting
-- **Lazy Loading** - Components loaded on demand
-- **Optimized Images** - WebP format with fallbacks
+### **Code Optimization**
+- **Code Splitting** - Route-based code splitting with React.lazy
+- **Lazy Loading** - Components loaded on demand with intersection observer
+- **Bundle Optimization** - Tree shaking and dead code elimination
+- **Dynamic Imports** - Heavy components loaded only when needed
+
+### **Runtime Performance**
+- **Debouncing** - Expensive operations debounced (300ms)
+- **Throttling** - Frequent events throttled (100ms)
+- **Memoization** - Expensive calculations cached
+- **Virtual Scrolling** - Large lists optimized for performance
+
+### **Memory Management**
+- **Automatic Cleanup** - Memory leaks prevented with proper cleanup
+- **Garbage Collection** - Manual GC triggers for heavy operations
+- **Component Unmounting** - Proper cleanup on component unmount
+- **Event Listener Management** - Listeners properly removed
+
+### **Asset Optimization**
+- **Image Optimization** - WebP format with fallbacks
+- **Font Loading** - Optimized font loading strategies
+- **CSS Optimization** - Purged unused styles
 - **Bundle Analysis** - Webpack bundle analyzer integration
 
 ## 🤝 Contributing

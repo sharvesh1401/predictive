@@ -17,6 +17,7 @@ export const useSimulationStore = create(
       selectedRoute: null,
       isLoading: false,
       error: null,
+      aiProvider: null,
       
       // UI state
       isDarkMode: true,
@@ -34,6 +35,7 @@ export const useSimulationStore = create(
       setSelectedRoute: (route) => set({ selectedRoute: route }),
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
+      setAIProvider: (provider) => set({ aiProvider: provider }),
       
       toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
@@ -43,7 +45,8 @@ export const useSimulationStore = create(
         routes: [],
         selectedRoute: null,
         isLoading: false,
-        error: null
+        error: null,
+        aiProvider: null
       }),
       
       // Clear all data
@@ -53,7 +56,8 @@ export const useSimulationStore = create(
         routes: [],
         selectedRoute: null,
         isLoading: false,
-        error: null
+        error: null,
+        aiProvider: null
       })
     }),
     {

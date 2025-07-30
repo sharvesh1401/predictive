@@ -1,37 +1,19 @@
-import axios from 'axios';
+import { secureAPIService } from './secureAPI';
 import toast from 'react-hot-toast';
 
-// Create axios instance with base configuration
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor
-api.interceptors.request.use(
-  (config) => {
-    // Add loading indicator or auth token here if needed
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    const message = error.response?.data?.detail || error.message || 'An error occurred';
-    toast.error(message);
-    return Promise.reject(error);
-  }
-);
+// Create secure API instance
+const api = {
+  // Use secure API service for all requests
+  get: (url, config) => secureAPIService.callBackendAPI(url, 'GET', null),
+  post: (url, data, config) => secureAPIService.callBackendAPI(url, 'POST', data),
+  put: (url, data, config) => secureAPIService.callBackendAPI(url, 'PUT', data),
+  delete: (url, config) => secureAPIService.callBackendAPI(url, 'DELETE', null),
+  
+  // Security utilities
+  getSecurityReport: () => secureAPIService.getSecurityReport(),
+  validateAPIKeys: () => secureAPIService.validateAPIKeys(),
+  getRateLimitInfo: (key) => secureAPIService.getRateLimitInfo(key)
+};
 
 // API endpoints
 export const simulationAPI = {
@@ -101,11 +83,128 @@ export const simulationAPI = {
   }
 };
 
+// AI Navigation Service using Secure API
+export const aiNavigationService = {
+  // Try DeepSeek first, then Groq as fallback
+  getAINavigation: async (params) => {
+    const { origin, destination, userProfile, batteryCapacity, currentBattery } = params;
+
+    const prompt = `You are an AI navigation assistant for electric vehicles. 
+    
+    Route Request:
+    - Origin: ${origin}
+    - Destination: ${destination}
+    - User Profile: ${userProfile}
+    - Battery Capacity: ${batteryCapacity} kWh
+    - Current Battery: ${currentBattery}%
+    
+    Please provide an optimized route considering:
+    1. Battery efficiency and charging stops
+    2. User preferences (${userProfile})
+    3. Traffic conditions
+    4. Charging station availability
+    
+    Return a JSON response with:
+    {
+      "route": {
+        "distance": number,
+        "duration": number,
+        "energy": number,
+        "cost": number,
+        "coordinates": [[lat, lng], ...],
+        "chargingStops": [{"lat": number, "lng": number, "duration": number, "cost": number}],
+        "reasoning": "string"
+      }
+    }`;
+
+    // Try DeepSeek API first using secure service
+    try {
+      const deepseekResponse = await secureAPIService.callDeepSeekAPI(prompt);
+      const content = deepseekResponse.choices[0].message.content;
+      
+      try {
+        const routeData = JSON.parse(content);
+        return {
+          ...routeData,
+          aiProvider: 'deepseek',
+          success: true
+        };
+      } catch (parseError) {
+        console.warn('Failed to parse DeepSeek response:', parseError);
+        throw new Error('Invalid response format from DeepSeek');
+      }
+    } catch (deepseekError) {
+      console.warn('DeepSeek failed, trying Groq:', deepseekError);
+      
+      // Fallback to Groq API using secure service
+      try {
+        const groqResponse = await secureAPIService.callGroqAPI(prompt);
+        const content = groqResponse.choices[0].message.content;
+        
+        try {
+          const routeData = JSON.parse(content);
+          return {
+            ...routeData,
+            aiProvider: 'groq',
+            success: true
+          };
+        } catch (parseError) {
+          console.warn('Failed to parse Groq response:', parseError);
+          throw new Error('Invalid response format from Groq');
+        }
+      } catch (groqError) {
+        console.error('Both AI APIs failed:', groqError);
+        throw new Error('AI navigation services are currently unavailable');
+      }
+    }
+  }
+};
+
 // Mock data for development
 export const mockAPI = {
   calculateRoutes: async (params) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // If AI algorithm is selected, try AI navigation
+    if (params.algorithm === 'ai') {
+      try {
+        const aiRoute = await aiNavigationService.getAINavigation(params);
+        return {
+          routes: [
+            {
+              id: 1,
+              algorithm: 'ai',
+              aiProvider: aiRoute.aiProvider,
+              distance: aiRoute.route.distance || 13.1,
+              duration: aiRoute.route.duration || 20,
+              energy: aiRoute.route.energy || 7.8,
+              cost: aiRoute.route.cost || 14.5,
+              coordinates: aiRoute.route.coordinates || [
+                [4.9041, 52.3676],
+                [4.9141, 52.3776],
+                [4.9241, 52.3876]
+              ],
+              chargingStops: aiRoute.route.chargingStops || [
+                { lat: 4.9141, lng: 52.3776, duration: 15, cost: 8.50 }
+              ],
+              reasoning: aiRoute.route.reasoning || 'AI-optimized route considering battery efficiency and user preferences'
+            }
+          ],
+          summary: {
+            totalRoutes: 1,
+            bestRoute: 1,
+            averageDistance: aiRoute.route.distance || 13.1,
+            averageDuration: aiRoute.route.duration || 20,
+            averageEnergy: aiRoute.route.energy || 7.8,
+            averageCost: aiRoute.route.cost || 14.5
+          }
+        };
+      } catch (aiError) {
+        console.warn('AI navigation failed, falling back to mock data:', aiError);
+        // Fall back to regular mock data
+      }
+    }
     
     return {
       routes: [
