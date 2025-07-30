@@ -14,9 +14,14 @@ import { useSimulationStore } from '../store/simulationStore';
 import { useMap } from '../hooks/useMap';
 import { Card } from './ui/Card';
 import { mockAPI } from '../services/api';
+import { MAP_CONFIG } from '../constants';
 
-// Set your Mapbox access token here
-mapboxgl.accessToken = '14402eda-48ca-4832-b2e4-fce9aa6e40b8';
+// Set Mapbox access token from environment variable
+if (MAP_CONFIG.ACCESS_TOKEN) {
+  mapboxgl.accessToken = MAP_CONFIG.ACCESS_TOKEN;
+} else {
+  console.error('Mapbox access token not found. Please set REACT_APP_MAPBOX_TOKEN environment variable.');
+}
 
 const MapPanel = () => {
   const mapContainer = useRef(null);

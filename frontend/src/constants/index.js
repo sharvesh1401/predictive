@@ -15,13 +15,13 @@ export const MAP_CONFIG = {
   DEFAULT_PITCH: 45,
   DEFAULT_BEARING: 0,
   STYLE: 'mapbox://styles/mapbox/dark-v11',
-  ACCESS_TOKEN: '14402eda-48ca-4832-b2e4-fce9aa6e40b8',
+  ACCESS_TOKEN: process.env.REACT_APP_MAPBOX_TOKEN,
 };
 
 // AI Configuration
 export const AI_CONFIG = {
-  DEEPSEEK_API_KEY: process.env.REACT_APP_DEEPSEEK_API_KEY || 'sk-744d64e9a996410da9b03c7c79b66d8f',
-  GROQ_API_KEY: process.env.REACT_APP_GROQ_API_KEY || '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',
+  DEEPSEEK_API_KEY: process.env.REACT_APP_DEEPSEEK_API_KEY,
+  GROQ_API_KEY: process.env.REACT_APP_GROQ_API_KEY,
   DEEPSEEK_URL: 'https://api.deepseek.com/v1/chat/completions',
   GROQ_URL: 'https://api.groq.com/openai/v1/chat/completions',
   DEEPSEEK_MODEL: 'deepseek-chat',

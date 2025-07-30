@@ -51,15 +51,24 @@ class SecureAPIKeyManager {
   initializeKeys() {
     try {
       // Mapbox API Key
-      const mapboxKey = process.env.REACT_APP_MAPBOX_TOKEN || '14402eda-48ca-4832-b2e4-fce9aa6e40b8';
+      const mapboxKey = process.env.REACT_APP_MAPBOX_TOKEN;
+      if (!mapboxKey) {
+        throw new Error('REACT_APP_MAPBOX_TOKEN environment variable is required');
+      }
       this.addKey('mapbox', mapboxKey, 'MAPBOX');
 
       // DeepSeek API Key
-      const deepseekKey = process.env.REACT_APP_DEEPSEEK_API_KEY || 'sk-744d64e9a996410da9b03c7c79b66d8f';
+      const deepseekKey = process.env.REACT_APP_DEEPSEEK_API_KEY;
+      if (!deepseekKey) {
+        throw new Error('REACT_APP_DEEPSEEK_API_KEY environment variable is required');
+      }
       this.addKey('deepseek', deepseekKey, 'DEEPSEEK');
 
       // Groq API Key
-      const groqKey = process.env.REACT_APP_GROQ_API_KEY || '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';
+      const groqKey = process.env.REACT_APP_GROQ_API_KEY;
+      if (!groqKey) {
+        throw new Error('REACT_APP_GROQ_API_KEY environment variable is required');
+      }
       this.addKey('groq', groqKey, 'GROQ');
 
       security.securityMonitor.logEvent('api_keys_initialized', {

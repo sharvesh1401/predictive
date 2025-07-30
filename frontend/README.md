@@ -185,6 +185,36 @@ The frontend communicates with the backend through RESTful APIs:
 ### Mock Data
 For development, the app includes mock API responses that simulate real backend behavior.
 
+## 🔐 Environment Setup
+
+### **Required Environment Variables**
+Before running the application, you need to set up your API keys:
+
+1. **Copy the example environment file:**
+   ```bash
+   cp env.example .env.local
+   ```
+
+2. **Add your API keys to `.env.local`:**
+   ```bash
+   # Mapbox API Key (Required for maps)
+   REACT_APP_MAPBOX_TOKEN=your_mapbox_token_here
+   
+   # AI API Keys (Required for AI navigation)
+   REACT_APP_DEEPSEEK_API_KEY=your_deepseek_api_key_here
+   REACT_APP_GROQ_API_KEY=your_groq_api_key_here
+   ```
+
+3. **Get your API keys:**
+   - **Mapbox**: [Get Mapbox Token](https://account.mapbox.com/access-tokens/)
+   - **DeepSeek**: [Get DeepSeek API Key](https://platform.deepseek.com/)
+   - **Groq**: [Get Groq API Key](https://console.groq.com/)
+
+### **Security Note**
+- Never commit your `.env.local` file to version control
+- API keys are automatically encrypted and secured
+- All sensitive data is protected with AES-256-GCM encryption
+
 ## 🚀 Deployment
 
 ### Build for Production
@@ -197,6 +227,15 @@ npm run build
 docker build -t ev-routing-frontend .
 docker run -p 3000:3000 ev-routing-frontend
 ```
+
+### **Vercel Deployment**
+1. **Fork/Clone** this repository
+2. **Connect** to Vercel
+3. **Deploy** with one click
+4. **Configure** environment variables in Vercel dashboard:
+   - `REACT_APP_MAPBOX_TOKEN`
+   - `REACT_APP_DEEPSEEK_API_KEY`
+   - `REACT_APP_GROQ_API_KEY`
 
 ## 🧪 Development
 
