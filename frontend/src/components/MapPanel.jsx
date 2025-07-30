@@ -48,6 +48,8 @@ const MapPanel = () => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
+    let chargingStationsCleanup = null;
+
     const initializeMapAsync = async () => {
       try {
         setIsLoading(true);
@@ -60,7 +62,7 @@ const MapPanel = () => {
         
         // Load charging stations
         const { stations } = await mockAPI.getChargingStations();
-        addChargingStations(map, stations);
+        chargingStationsCleanup = addChargingStations(map, stations);
         
         // Add click handler
         map.on('click', handleMapClick);
@@ -74,14 +76,22 @@ const MapPanel = () => {
 
     initializeMapAsync();
 
-    return cleanup;
+    return () => {
+      if (chargingStationsCleanup) {
+        chargingStationsCleanup();
+      }
+      cleanup();
+    };
   }, [initializeMap, addMapControls, addChargingStations, handleMapClick, cleanup]);
 
   // Update map when routes change
   useEffect(() => {
     if (mapInstance && selectedRoute?.coordinates) {
-      addRouteLayer(mapInstance, selectedRoute);
+      const cleanupAnimation = addRouteLayer(mapInstance, selectedRoute);
       fitMapToRoute(mapInstance, selectedRoute.coordinates);
+      
+      // Return cleanup function for animation
+      return cleanupAnimation;
     }
   }, [mapInstance, selectedRoute, addRouteLayer, fitMapToRoute]);
 
