@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build: ./backend
@@ -7,34 +5,37 @@ services:
       - "8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OCM_API_KEY=${OCM_API_KEY:-}
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
     volumes:
       - ./backend:/app
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+      - backend_data:/app/data
+    command: python start.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
 
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
       - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_MAPBOX_TOKEN=${REACT_APP_MAPBOX_TOKEN:-}
+      - REACT_APP_DEEPSEEK_API_KEY=${REACT_APP_DEEPSEEK_API_KEY:-}
+      - REACT_APP_GROQ_API_KEY=${REACT_APP_GROQ_API_KEY:-}
     depends_on:
-      - backend
-    command: npm start
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
 
-  # Optional: Add a database for future enhancements
-  # postgres:
-  #   image: postgres:13
-  #   environment:
-  #     POSTGRES_DB: ev_routing
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: password
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-
-# volumes:
-#   postgres_data: 
+volumes:
+  backend_data: 

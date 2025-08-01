@@ -1,35 +1,26 @@
-# Multi-stage build for production
-FROM node:18-alpine AS builder
-
-# Set working directory
+# Stage 1: Install dependencies
+FROM node:18-alpine AS deps
 WORKDIR /app
+COPY package.json package-lock.json* ./
 
-# Copy package files
-COPY package*.json ./
+# Install all dependencies (including dev dependencies needed for build)
+RUN npm ci
 
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+# Stage 2: Build the application
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the app
+# Build the application
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine AS production
-
-# Copy built app from builder stage
+# Stage 3: Serve the application with Nginx
+FROM nginx:1.25-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx config for React Router
-COPY nginx-react-router.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
 EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["nginx", "-g", "daemon off;"]

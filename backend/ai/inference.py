@@ -3,7 +3,7 @@ import json
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import requests
-from .models.routing import RouteResult
+from models.routing import RouteResult
 
 @dataclass
 class AIEnhancementRequest:

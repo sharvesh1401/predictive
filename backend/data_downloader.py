@@ -4,7 +4,7 @@
 import os
 import osmnx as ox
 import pandas as pd
-from openchargemap import OpenChargeMap
+# from openchargemap import OpenChargeMap  # Commented out - package not available
 
 # --- Configuration ---
 # Define the location for our map data

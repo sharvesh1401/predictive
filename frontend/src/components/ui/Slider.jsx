@@ -29,6 +29,7 @@
  */
 
 import React, { forwardRef, memo, useState, useCallback, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { cn, colors, spacing, borderRadius, typography, shadows, transitions } from '../../design-system';
 

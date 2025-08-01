@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useSimulationStore } from '../store/simulationStore';
 import { useMap } from '../hooks/useMap';
-import { Card } from './ui/Card';
+import Card from './ui/Card';
 import { mockAPI } from '../services/api';
 import { MAP_CONFIG } from '../constants';
 

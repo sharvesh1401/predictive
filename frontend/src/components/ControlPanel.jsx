@@ -16,7 +16,7 @@ import {
 import { useSimulationStore } from '../store/simulationStore';
 import { useSimulation } from '../hooks/useSimulation';
 import { cn } from '../lib/utils';
-import { Card, CardHeader, CardContent } from './ui/Card';
+import Card, { CardHeader, CardContent } from './ui/Card';
 import Button from './ui/Button';
 import Slider from './ui/Slider';
 

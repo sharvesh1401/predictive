@@ -4,10 +4,10 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import uvicorn
 
-from ..models.routing import AmsterdamRouter, RouteResult, create_amsterdam_graph
-from ..models.profiles import DriverProfile, profile_manager
-from ..models.optimizer import RouteOptimizer
-from ..ai.inference import create_ai_enhancer, AIEnhancementRequest
+from models.routing import AmsterdamRouter, RouteResult, create_amsterdam_graph
+from models.profiles import DriverProfile, profile_manager
+from models.optimizer import RouteOptimizer
+from ai.inference import create_ai_enhancer, AIEnhancementRequest
 
 # Initialize FastAPI app
 app = FastAPI(

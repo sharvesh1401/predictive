@@ -25,7 +25,7 @@ import {
   MapPin, 
   DollarSign,
   Zap,
-  Route,
+  Navigation,
   Target,
   Award
 } from 'lucide-react';
@@ -88,7 +88,7 @@ const Results = () => {
   ];
 
   const routeDetails = [
-    { label: 'Algorithm Used', value: selectedRoute?.algorithm || 'Dijkstra', icon: Route },
+    { label: 'Algorithm Used', value: selectedRoute?.algorithm || 'Dijkstra', icon: Navigation },
     { label: 'User Profile', value: 'Balanced', icon: Target },
     { label: 'Battery Efficiency', value: '92%', icon: Zap },
     { label: 'Route Score', value: '8.7/10', icon: Award },
@@ -296,7 +296,7 @@ const Results = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-foreground">Route Details</h3>
-              <Route className="w-5 h-5 text-primary" />
+              <Navigation className="w-5 h-5 text-primary" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {routeDetails.map((detail, index) => {
