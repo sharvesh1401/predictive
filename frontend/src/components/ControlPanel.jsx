@@ -120,6 +120,7 @@ const ControlPanel = () => {
                         checked={algorithm === algo.id}
                         onChange={(e) => setAlgorithm(e.target.value)}
                         className="w-4 h-4 text-primary border-border focus:ring-primary"
+                        aria-label={`Select ${algo.name} algorithm`}
                       />
                       <div className="flex-1">
                         <div className="font-medium text-foreground">{algo.name}</div>
@@ -223,6 +224,7 @@ const ControlPanel = () => {
                         checked={userProfile === profile.id}
                         onChange={(e) => setUserProfile(e.target.value)}
                         className="w-4 h-4 text-primary border-border focus:ring-primary"
+                        aria-label={`Select ${profile.name} profile`}
                       />
                       <div className="flex-1">
                         <div className="font-medium text-foreground">{profile.name}</div>

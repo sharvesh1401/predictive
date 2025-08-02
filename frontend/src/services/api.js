@@ -19,67 +19,43 @@ const api = {
 export const simulationAPI = {
   // Calculate routes
   calculateRoutes: async (params) => {
-    try {
-      const response = await api.post('/api/calculate-routes', params);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/api/calculate-routes', params);
+    return response.data;
   },
 
   // Get charging stations
   getChargingStations: async (bounds) => {
-    try {
-      const response = await api.get('/api/charging-stations', {
-        params: { bounds }
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get('/api/charging-stations', {
+      params: { bounds }
+    });
+    return response.data;
   },
 
   // Get route optimization
   optimizeRoute: async (params) => {
-    try {
-      const response = await api.post('/api/optimize-route', params);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/api/optimize-route', params);
+    return response.data;
   },
 
   // Get simulation results
   getSimulationResults: async (simulationId) => {
-    try {
-      const response = await api.get(`/api/simulation/${simulationId}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/api/simulation/${simulationId}`);
+    return response.data;
   },
 
   // Save simulation
   saveSimulation: async (simulationData) => {
-    try {
-      const response = await api.post('/api/simulation', simulationData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/api/simulation', simulationData);
+    return response.data;
   },
 
   // Export results
   exportResults: async (simulationId, format = 'pdf') => {
-    try {
-      const response = await api.get(`/api/export/${simulationId}`, {
-        params: { format },
-        responseType: 'blob'
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.get(`/api/export/${simulationId}`, {
+      params: { format },
+      responseType: 'blob'
+    });
+    return response.data;
   }
 };
 

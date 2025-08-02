@@ -137,6 +137,16 @@ const Card = forwardRef(({
     }
     onClick?.(event);
   };
+
+  const handleKeyDown = (event) => {
+    if (isDisabled || !clickable) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onClick?.(event);
+    }
+  };
   
   // ============================================================================
   // ACCESSIBILITY ATTRIBUTES
@@ -149,8 +159,8 @@ const Card = forwardRef(({
     'aria-pressed': ariaPressed,
     'aria-haspopup': ariaHasPopup,
     'aria-disabled': isDisabled,
-    role: clickable ? 'button' : undefined,
-    tabIndex: clickable && !isDisabled ? 0 : undefined,
+    role: (clickable || hoverable) ? 'button' : undefined,
+    tabIndex: (clickable || hoverable) && !isDisabled ? 0 : undefined,
   };
   
   // ============================================================================
@@ -219,6 +229,7 @@ const Card = forwardRef(({
         className={cn('card', className)}
         style={cardStyles}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onFocus={onFocus}
@@ -244,6 +255,7 @@ const Card = forwardRef(({
       className={cn('card', className)}
       style={cardStyles}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
