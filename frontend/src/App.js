@@ -8,6 +8,7 @@ import SecurityProvider, { SecurityStatus, SecurityMonitor } from './components/
 // Components
 import Header from './components/Header';
 import Footer from './components/Footer';
+import TestConnection from './components/TestConnection';
 
 // Pages
 import Home from './pages/Home';
@@ -29,6 +30,19 @@ const Docs = () => (
     <div className="text-center">
       <h1 className="text-3xl font-bold text-foreground mb-4">Documentation</h1>
       <p className="text-muted-foreground">Coming soon...</p>
+    </div>
+  </div>
+);
+
+// Test Connection Page
+const TestConnectionPage = () => (
+  <div className="min-h-screen bg-background pt-20 pb-10 px-4">
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Backend Connection Tester</h1>
+        <p className="text-muted-foreground">Test the connection to the EV Routing API</p>
+      </div>
+      <TestConnection />
     </div>
   </div>
 );

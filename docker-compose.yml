@@ -1,6 +1,8 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -19,7 +21,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
+    image: sharves14/ev-routing-frontend:latest
     ports:
       - "3000:80"
     environment:

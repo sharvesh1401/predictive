@@ -147,22 +147,134 @@ class AIRouteEnhancer:
             "energy_impact_factor": 1.05
         }
     
-    def suggest_charging_optimization(self, route: RouteResult, 
-                                   driver_profile: str) -> List[Dict[str, Any]]:
-        """Suggest charging stop optimizations"""
+    def suggest_charging_optimization(self, route: RouteResult, driver_profile: str) -> List[Dict[str, Any]]:
+        """Suggest charging optimizations based on route and driver profile
+        
+        Args:
+            route: The route to optimize charging for
+            driver_profile: The driver's profile (e.g., 'eco', 'balanced', 'sport')
+            
+        Returns:
+            List of charging optimization suggestions
+        """
+        # In a real implementation, this would use AI to analyze the route
+        # and provide smart charging recommendations
+        try:
+            # Prepare the prompt for AI analysis
+            prompt = self._create_charging_optimization_prompt(route, driver_profile)
+            
+            # Call AI API
+            response = self._call_ai_api(prompt)
+            
+            # Parse and return the suggestions
+            return self._parse_charging_suggestions(response)
+            
+        except Exception as e:
+            # Fallback to basic suggestions if AI fails
+            print(f"AI charging optimization failed: {e}")
+            
+            # Calculate remaining battery percentage if we have the required attributes
+            remaining_battery_percent = 0
+            if hasattr(route, 'current_charge_kwh') and hasattr(route, 'battery_capacity_kwh'):
+                remaining_battery_percent = (route.current_charge_kwh / route.battery_capacity_kwh) * 100
+            
+            # Provide a basic suggestion based on battery level
+            if remaining_battery_percent < 20:
+                return [{
+                    "type": "charging_stop",
+                    "location": "Nearest Fast Charger",
+                    "suggested_charge_level": 80,
+                    "estimated_charging_time": 30,
+                    "reason": f"Battery level ({remaining_battery_percent:.1f}%) is low. Consider charging soon.",
+                    "priority": "high"
+                }]
+            else:
+                return [{
+                    "type": "info",
+                    "message": "Battery level is sufficient. No charging needed at this time.",
+                    "priority": "low"
+                }]
+    
+    def _get_charging_suggestions(self, route: RouteResult) -> List[Dict[str, Any]]:
+        """Get charging station suggestions along the route"""
+        # This is a placeholder implementation
+        # In a real implementation, this would use charging station data
+        # and the vehicle's charging curve to optimize charging stops
         suggestions = []
         
-        for i, stop in enumerate(route.charging_stops):
-            suggestion = {
-                "station_id": stop["station_id"],
-                "current_charge_time": 30,  # minutes
-                "suggested_charge_time": 45,  # minutes
-                "reasoning": "Optimal charging time for battery health",
-                "cost_savings": 2.50  # euros
-            }
-            suggestions.append(suggestion)
-        
+        # Example suggestion: Add a charging stop if battery is low
+        if hasattr(route, 'remaining_battery_percent') and route.remaining_battery_percent < 20:
+            suggestions.append({
+                "location": "FastCharge Station #123",
+                "suggested_charge_level": 80,
+                "estimated_charging_time": 25,
+                "reason": f"Battery level ({route.remaining_battery_percent}%) is low"
+            })
+            
         return suggestions
+    
+    def _create_charging_optimization_prompt(self, route: RouteResult, driver_profile: str) -> str:
+        """Create a prompt for AI charging optimization"""
+        # Get available attributes safely
+        origin = getattr(route, 'origin', 'Unknown')
+        destination = getattr(route, 'destination', 'Unknown')
+        total_distance = getattr(route, 'total_distance_km', 0)
+        estimated_time = getattr(route, 'estimated_time_min', 0)
+        energy_used = getattr(route, 'energy_used_kWh', 0)
+        emissions = getattr(route, 'emissions_grams', 0)
+        charging_stops = getattr(route, 'charging_stops', [])
+        
+        # Calculate battery percentage if possible
+        battery_info = ""
+        if hasattr(route, 'current_charge_kwh') and hasattr(route, 'battery_capacity_kwh'):
+            battery_percent = (route.current_charge_kwh / route.battery_capacity_kwh) * 100
+            battery_info = f"- Current Battery: {battery_percent:.1f}%\n"
+        
+        prompt = f"""
+        You are an AI assistant specialized in electric vehicle charging optimization for Amsterdam.
+        
+        Current Route Analysis:
+        - Origin: {origin}
+        - Destination: {destination}
+        - Total Distance: {total_distance:.2f} km
+        - Estimated Time: {estimated_time:.1f} minutes
+        - Energy Usage: {energy_used:.2f} kWh
+        - Emissions: {emissions:.1f} g CO2
+        {battery_info}- Charging Stops: {len(charging_stops)}
+        
+        Driver Profile: {driver_profile}
+        
+        Please analyze this route and suggest charging optimizations considering:
+        1. Energy efficiency optimization
+        2. Time optimization
+        3. Charging stop optimization
+        4. Environmental impact
+        5. Cost considerations
+        
+        Provide specific recommendations for charging optimizations.
+        """
+        return prompt
+    
+    def _parse_charging_suggestions(self, ai_response: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Parse AI response and create charging suggestions"""
+        try:
+            content = ai_response["choices"][0]["message"]["content"]
+            
+            # For now, return basic suggestions
+            # In a full implementation, this would parse the AI response
+            # and create actual charging suggestions
+            
+            return [
+                {
+                    "location": "FastCharge Station #123",
+                    "suggested_charge_level": 80,
+                    "estimated_charging_time": 25,
+                    "reason": f"Battery level is low"
+                }
+            ]
+            
+        except (KeyError, IndexError) as e:
+            raise ValueError(f"Failed to parse AI response: {e}")
 
 class MockAIEnhancer:
     """Mock AI enhancer for development and testing"""
@@ -207,6 +319,66 @@ class MockAIEnhancer:
             "wind_speed_kmh": 8,
             "energy_impact_factor": 1.02
         }
+    
+    def suggest_charging_optimization(self, route: RouteResult, driver_profile: str) -> List[Dict[str, Any]]:
+        """Suggest charging optimizations based on route and driver profile
+        
+        Args:
+            route: The route to optimize charging for
+            driver_profile: The driver's profile (e.g., 'eco', 'balanced', 'sport')
+            
+        Returns:
+            List of charging optimization suggestions
+        """
+        # This is a mock implementation that provides example suggestions
+        suggestions = []
+        
+        # Calculate remaining battery percentage if we have the required attributes
+        remaining_battery_percent = 0
+        if hasattr(route, 'current_charge_kwh') and hasattr(route, 'battery_capacity_kwh'):
+            remaining_battery_percent = (route.current_charge_kwh / route.battery_capacity_kwh) * 100
+        
+        # Example suggestion 1: Fast charging when battery is low
+        if remaining_battery_percent < 20:
+            suggestions.append({
+                "type": "charging_stop",
+                "location": "FastCharge Station #123",
+                "suggested_charge_level": 80,
+                "estimated_charging_time": 25,
+                "reason": f"Battery level ({remaining_battery_percent:.1f}%) is low. Top up to 80% for optimal range.",
+                "priority": "high"
+            })
+        
+        # Example suggestion 2: Destination charging if available
+        if hasattr(route, 'route') and ("Amsterdam_Central" in route.route or "Amsterdam_Schiphol" in route.route):
+            suggestions.append({
+                "type": "destination_charging",
+                "location": "Destination Charger",
+                "suggested_charge_level": 90,
+                "estimated_charging_time": 45,
+                "reason": "Charging available at destination. Top up while parked.",
+                "priority": "medium"
+            })
+            
+        # Example suggestion 3: Off-peak charging if applicable
+        if driver_profile == "eco":
+            suggestions.append({
+                "type": "timing_optimization",
+                "suggestion": "Charge during off-peak hours (23:00-07:00)",
+                "cost_savings": "30%",
+                "reason": "Lower electricity rates during off-peak hours",
+                "priority": "low"
+            })
+        
+        # If no suggestions were added, provide a default one
+        if not suggestions:
+            suggestions.append({
+                "type": "info",
+                "message": "No specific charging optimizations needed.",
+                "priority": "low"
+            })
+            
+        return suggestions
 
 # Factory function to create AI enhancer
 def create_ai_enhancer(use_mock: bool = True, api_key: Optional[str] = None):

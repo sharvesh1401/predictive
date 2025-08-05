@@ -2,6 +2,7 @@
 // Implements maximum security for API communications
 
 import axios from 'axios';
+import config from '../config';
 import { 
   initializeSecurity, 
   validateAPIKey, 
@@ -18,17 +19,17 @@ const security = initializeSecurity();
 const API_CONFIG = {
   // Base URLs with fallbacks
   BASE_URLS: {
-    MAPBOX: 'https://api.mapbox.com',
-    DEEPSEEK: 'https://api.deepseek.com',
-    GROQ: 'https://api.groq.com',
-    BACKEND: process.env.REACT_APP_API_URL || 'https://ev-routing-backend.vercel.app'
+    MAPBOX: config.api.baseURLs.mapbox,
+    DEEPSEEK: config.api.baseURLs.deepseek,
+    GROQ: config.api.baseURLs.groq,
+    BACKEND: config.api.baseURL
   },
   
   // Request timeouts
   TIMEOUTS: {
-    SHORT: 10000,    // 10 seconds
-    MEDIUM: 30000,   // 30 seconds
-    LONG: 60000      // 60 seconds
+    SHORT: config.api.timeouts.short,    // 5 seconds
+    MEDIUM: config.api.timeouts.default, // 10 seconds
+    LONG: config.api.timeouts.long       // 30 seconds
   },
   
   // Retry configuration
