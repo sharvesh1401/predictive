@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -29,10 +29,16 @@ services:
       - REACT_APP_MAPBOX_TOKEN=${REACT_APP_MAPBOX_TOKEN:-}
       - REACT_APP_DEEPSEEK_API_KEY=${REACT_APP_DEEPSEEK_API_KEY:-}
       - REACT_APP_GROQ_API_KEY=${REACT_APP_GROQ_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     depends_on:
       backend:
         condition: service_healthy
     restart: unless-stopped
 
 volumes:
-  backend_data: 
+  backend_data:

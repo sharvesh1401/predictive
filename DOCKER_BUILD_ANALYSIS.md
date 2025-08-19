@@ -49,6 +49,14 @@ geopandas==1.1.1
 - Created `nginx.conf` with proper configuration
 - Updated README.md with Docker-specific instructions
 
+### 7. **Health Check Endpoint Mismatch**
+**Issue**: Inconsistent health check endpoints between Docker configuration and nginx
+**Fixes**:
+- Added `/health` endpoint to frontend nginx configuration
+- Added HEALTHCHECK instruction to frontend Dockerfile
+- Updated docker-compose.yml with consistent health check configuration
+- Changed health check tool from curl to wget for frontend service
+
 ## Files Modified
 
 ### Backend
@@ -57,12 +65,14 @@ geopandas==1.1.1
 - `ai/inference.py` - Fixed import path
 
 ### Frontend
-- `Dockerfile` - Removed workarounds, improved build process
+- `Dockerfile` - Removed workarounds, improved build process, added HEALTHCHECK instruction
 - `package.json` - Removed problematic prebuild script
-- `nginx.conf` - Created proper nginx configuration
+- `nginx.conf` - Created proper nginx configuration, added health check endpoint
+- `nginx-react-router.conf` - Reference for health check endpoint configuration
 
 ### Configuration
-- `docker-compose.yml` - Removed version, added health checks, improved configuration
+- `docker-compose.yml` - Removed version, added health checks, improved configuration, fixed build context
+- `frontend/docker-compose.yml` - Updated health check configuration for consistency
 - `env.example` - Created environment variable template
 - `README.md` - Updated with Docker build instructions
 
@@ -81,9 +91,11 @@ geopandas==1.1.1
    - Environment: API URLs + external service keys
 
 ### Health Checks
-- Backend: HTTP health check every 30s
-- Frontend: Depends on backend health
+- Backend: HTTP health check at `/api/health` endpoint every 30s using curl
+- Frontend: HTTP health check at `/health` endpoint every 30s using wget
+- Services depend on each other's health status
 - Automatic restart on failure
+- Configurable retry and timeout parameters
 
 ### Environment Variables
 - `OPENAI_API_KEY` - AI enhancement
@@ -128,9 +140,11 @@ docker-compose up --build
 
 1. **Build Test**: `docker-compose build`
 2. **Configuration Test**: `docker-compose config`
-3. **Health Check**: `curl http://localhost:8000/api/health`
-4. **Frontend Test**: Access http://localhost:3000
-5. **API Test**: Access http://localhost:8000/docs
+3. **Backend Health Check**: `curl http://localhost:8000/api/health`
+4. **Frontend Health Check**: `wget --spider http://localhost:3000/health`
+5. **Frontend Test**: Access http://localhost:3000
+6. **API Test**: Access http://localhost:8000/docs
+7. **Docker Health Status**: `docker-compose ps` (check health status column)
 
 ## Production Considerations
 
@@ -151,4 +165,4 @@ The project is now fully Docker build-ready with:
 - ✅ Comprehensive documentation
 - ✅ Production-ready configuration
 
-The application can be built and run with a single command: `docker-compose up --build` 
+The application can be built and run with a single command: `docker-compose up --build`
