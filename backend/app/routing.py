@@ -85,10 +85,18 @@ def compute_deterministic_route(graph, origin: str, destination: str, constraint
         
         # Get driver profile
         try:
-            driver_profile = DriverProfile(driver_profile_name)
+            # Map string values to proper enum
+            profile_mapping = {
+                'EFFICIENT': 'eco',
+                'ECO': 'eco',
+                'AGGRESSIVE': 'aggressive', 
+                'BALANCED': 'balanced'
+            }
+            profile_value = profile_mapping.get(driver_profile_name.upper(), driver_profile_name.lower())
+            driver_profile = DriverProfile(profile_value)
         except:
-            driver_profile = DriverProfile.EFFICIENT
-            logger.warning(f"Invalid driver profile {driver_profile_name}, using EFFICIENT")
+            driver_profile = DriverProfile.BALANCED
+            logger.warning(f"Invalid driver profile {driver_profile_name}, using BALANCED")
         
         # Get router and calculate route
         router = _get_router()
