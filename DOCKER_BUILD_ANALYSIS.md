@@ -35,11 +35,14 @@ geopandas==1.1.1
 - Improved caching with proper layer ordering
 
 ### 5. **Frontend Dockerfile Issues**
-**Issues**: Build failures due to linting errors, workarounds in place
+**Issues**: Build failures due to linting errors, missing public directory, missing utility modules, and health check failures
 **Fixes**:
 - Removed problematic `prebuild` script from package.json
 - Fixed nginx configuration
 - Added proper nginx.conf with security headers
+- Created missing public directory with required files (index.html, manifest.json, etc.)
+- Added missing utility module (lib/utils.js)
+- Fixed health check configuration to use 127.0.0.1 instead of localhost
 - Improved build process without workarounds
 
 ### 6. **Missing Configuration Files**
@@ -50,12 +53,14 @@ geopandas==1.1.1
 - Updated README.md with Docker-specific instructions
 
 ### 7. **Health Check Endpoint Mismatch**
-**Issue**: Inconsistent health check endpoints between Docker configuration and nginx
+**Issue**: Inconsistent health check endpoints between Docker configuration and nginx, and connection issues with health check
 **Fixes**:
 - Added `/health` endpoint to frontend nginx configuration
 - Added HEALTHCHECK instruction to frontend Dockerfile
 - Updated docker-compose.yml with consistent health check configuration
 - Changed health check tool from curl to wget for frontend service
+- Fixed health check connection issue by using 127.0.0.1 instead of localhost in Dockerfile
+- Increased start period for health check to allow for proper initialization
 
 ## Files Modified
 
@@ -92,10 +97,11 @@ geopandas==1.1.1
 
 ### Health Checks
 - Backend: HTTP health check at `/api/health` endpoint every 30s using curl
-- Frontend: HTTP health check at `/health` endpoint every 30s using wget
+- Frontend: HTTP health check at `/health` endpoint every 30s using wget with 127.0.0.1 address
 - Services depend on each other's health status
 - Automatic restart on failure
-- Configurable retry and timeout parameters
+- Configurable retry/timeout parameters (currently set to 3 retries with 3s timeout)
+- Extended start period (30s) to allow for proper initialization
 
 ### Environment Variables
 - `OPENAI_API_KEY` - AI enhancement
@@ -142,9 +148,10 @@ docker-compose up --build
 2. **Configuration Test**: `docker-compose config`
 3. **Backend Health Check**: `curl http://localhost:8000/api/health`
 4. **Frontend Health Check**: `wget --spider http://localhost:3000/health`
-5. **Frontend Test**: Access http://localhost:3000
-6. **API Test**: Access http://localhost:8000/docs
-7. **Docker Health Status**: `docker-compose ps` (check health status column)
+5. **Docker Health Status**: `docker ps` or `docker-compose ps` (check for 'healthy' status)
+6. **Docker Health Logs**: `docker inspect --format='{{json .State.Health}}' <container_id> | jq`
+7. **Frontend Test**: Access http://localhost:3000
+8. **API Test**: Access http://localhost:8000/docs
 
 ## Production Considerations
 

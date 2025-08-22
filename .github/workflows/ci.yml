@@ -110,10 +110,42 @@ jobs:
         npm run lint || echo "Frontend linting issues found"
       continue-on-error: true
 
-  build-docker:
-    needs: [test-backend, test-frontend, lint]
+  build-frontend-artifacts:
+    needs: [test-frontend, lint]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+    
+    - name: Upload frontend build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+        retention-days: 1
+
+  build-docker:
+    needs: [test-backend, build-frontend-artifacts]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     
     steps:
     - uses: actions/checkout@v3
@@ -121,17 +153,39 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     
+    - name: Download frontend build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+    
     - name: Build backend image
-      run: |
-        cd backend
-        docker build -t ev-routing-backend:latest .
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend
+        push: false
+        tags: ev-routing-backend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
     
     - name: Build frontend image
-      run: |
-        cd frontend
-        docker build -t ev-routing-frontend:latest .
+      uses: docker/build-push-action@v4
+      with:
+        context: ./frontend
+        push: false
+        tags: ev-routing-frontend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
     
     - name: Test Docker Compose
       run: |
         docker-compose config
-        docker-compose build 
+        docker-compose build
+    
+    - name: Run smoke tests
+      run: |
+        docker-compose up -d
+        sleep 30
+        curl -f http://localhost:3000/health || exit 1
+        curl -f http://localhost:3000/ || exit 1
+        docker-compose down

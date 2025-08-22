@@ -37,7 +37,7 @@ const Header = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
+      className="fixed top-0 left-0 right-0 z-50 bg-zinc-800 backdrop-blur-md border-b border-zinc-700"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -99,7 +99,7 @@ const Header = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                    className="p-2 text-gray-200 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors"
                   >
                     <Icon className="w-4 h-4" />
                   </motion.a>
@@ -112,7 +112,7 @@ const Header = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={toggleDarkMode}
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+              className="p-2 text-gray-200 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors"
             >
               {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </motion.button>
@@ -122,7 +122,7 @@ const Header = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={toggleSidebar}
-              className="md:hidden p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+              className="md:hidden p-2 text-gray-200 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors"
             >
               {sidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </motion.button>
@@ -135,7 +135,7 @@ const Header = () => {
         initial={false}
         animate={{ height: sidebarOpen ? 'auto' : 0, opacity: sidebarOpen ? 1 : 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="md:hidden overflow-hidden border-t border-border"
+        className="md:hidden overflow-hidden border-t border-zinc-700"
       >
         <div className="px-4 py-4 space-y-2">
           {navItems.map((item) => {
@@ -151,7 +151,7 @@ const Header = () => {
                   "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
                     ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    : "text-gray-200 hover:text-white hover:bg-zinc-700"
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -161,7 +161,7 @@ const Header = () => {
           })}
           
           {/* Mobile External Links */}
-          <div className="pt-4 border-t border-border">
+          <div className="pt-4 border-t border-zinc-700">
             <div className="flex space-x-4">
               {externalLinks.map((link) => {
                 const Icon = link.icon;
@@ -171,7 +171,7 @@ const Header = () => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-2 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 text-gray-200 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors"
                   >
                     <Icon className="w-4 h-4" />
                     <span className="text-sm">{link.name}</span>
@@ -186,4 +186,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;
