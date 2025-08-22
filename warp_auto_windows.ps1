@@ -356,14 +356,7 @@ if (-not (Test-Path $AppInit)) {
 # === FRONTEND: add Dockerfile.prod (missing from your setup) ===
 $DockerProd = Join-Path $FrontendDir "Dockerfile.prod"
 if (-not (Test-Path $DockerProd)) {
-    $dockerProd = @'
-FROM nginx:stable-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY build/ /usr/share/nginx/html
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
-'@
+    $dockerProd = "FROM nginx:stable-alpine`nCOPY nginx.conf /etc/nginx/conf.d/default.conf`nCOPY build/ /usr/share/nginx/html`nEXPOSE 80`nHEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD wget --quiet --tries=1 --spider http://localhost/health`n"
     Write-FileUtf8 -Path $DockerProd -Content $dockerProd
     & git add $DockerProd
     try { & git commit -m "chore(frontend): add Dockerfile.prod (auto)" 2>$null } catch { Write-Host "Dockerfile.prod commit skipped." }
