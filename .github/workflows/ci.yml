@@ -67,7 +67,13 @@ jobs:
       run: |
         cd frontend
         npm run build
-      continue-on-error: true
+
+    - name: Upload frontend build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+        retention-days: 1
 
   lint:
     runs-on: ubuntu-latest
@@ -110,40 +116,8 @@ jobs:
         npm run lint || echo "Frontend linting issues found"
       continue-on-error: true
 
-  build-frontend-artifacts:
-    needs: [test-frontend, lint]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-    
-    - name: Install frontend dependencies
-      run: |
-        cd frontend
-        npm ci
-    
-    - name: Build frontend
-      run: |
-        cd frontend
-        npm run build
-    
-    - name: Upload frontend build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: frontend-build
-        path: frontend/build
-        retention-days: 1
-
   build-docker:
-    needs: [test-backend, build-frontend-artifacts]
+    needs: [test-backend, test-frontend, lint]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     
@@ -172,6 +146,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: ./frontend
+        file: ./frontend/Dockerfile.prod
         push: false
         tags: ev-routing-frontend:latest
         cache-from: type=gha
